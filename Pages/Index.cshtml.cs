@@ -19,6 +19,13 @@ namespace PhoneBook.Pages
         [BindProperty]
         public List<EntryObject> allPhoneBookEntries { get; set; }
 
+        [BindProperty]
+        public PhoneBookObject defaultPhoneBook { get; set; }
+
+        [BindProperty]
+        public string searchString { get; set; }
+        
+
         private readonly ILogger<IndexModel> _logger;
 
         public IndexModel(ILogger<IndexModel> logger)
@@ -28,20 +35,17 @@ namespace PhoneBook.Pages
 
         public void OnGet()
         {
-            //DAL.ExecuteSP("InsertPhoneBook");
             //Fetch all phone books
             GetPhoneBooks();
-            
+            defaultPhoneBook = allPhoneBooks.First();
+
             //Fetch all contacts of phone books
-           
+            GetAllContacts(defaultPhoneBook.PhoneBookID);            
         }
 
         public void OnPostFetchPhoneBookContact(Guid phoneBookId)
         {
             GetAllContacts(phoneBookId);
-            //do your work here
-            Console.WriteLine("Hello");
-
         }
 
         public void GetPhoneBooks()
@@ -65,7 +69,7 @@ namespace PhoneBook.Pages
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -94,7 +98,16 @@ namespace PhoneBook.Pages
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
+            }
+        }
+
+        public void OnPostSearch()
+        {
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                //filter data
+                allPhoneBookEntries = (List<EntryObject>)allPhoneBookEntries.Where(s => s.EntryName.Contains(searchString) || s.EntryNumber.Contains(searchString));
             }
         }
     }

@@ -8,13 +8,9 @@
     <p>This is a add multiple phone books with contacts as you please </p>
 </div>
 <form method="post">
-
     <section class="">
         <div class="dashboard">
             <div class="container-fluid">
-                <a href="#">
-                    <button class="btn_green btn_green_flex" type="button"> Add Phone Book </button>
-                </a>
                 <div class="row">
                     <div class="col-12 col-md-12">
                         <h3>Your Phone Books</h3>
@@ -24,11 +20,9 @@
                     <div class="col-12 col-md-12">
                         <div class="form_box">
                             <ul>
-                                @{
-                                    foreach (var phoneBook in Model.allPhoneBooks)
-                                    {
-                                        <input type="submit" value="@phoneBook.PhoneBookName" asp-page-handler="FetchPhoneBookContact" asp-route-phoneBookId="@phoneBook.PhoneBookID" />
-                                    }
+                                @foreach (var phoneBook in Model.allPhoneBooks)
+                                {
+                                    <input type="submit" value="@phoneBook.PhoneBookName" asp-page-handler="FetchPhoneBookContact" asp-route-phoneBookId="@phoneBook.PhoneBookID" />
                                 }
                             </ul>
                         </div>
@@ -37,14 +31,13 @@
                 <div class="content_box pb-5">
                     <div class="row">
                         <div class="col-12 col-md-8">
-                            <h3>Phone Book Name - Contacts</h3>
+                            <h3>@Model.defaultPhoneBook.PhoneBookName - Entries</h3>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form_box">
-                                <form method="post">
-                                    <input type="text" name="" placeholder="Search" class="form-control">
-                                    <button type="submit"></button>
-                                </form>
+                                <input asp-for="searchString" type="text" name="" placeholder="Enter your search value here" class="form-control">
+                                <input type="submit" value="Search" asp-page-handler="Search" />
+                                @Model.searchString
                             </div>
                         </div>
                     </div>
