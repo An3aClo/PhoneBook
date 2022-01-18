@@ -1,0 +1,273 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>This is a phone book where you can view contact numbers as well as adding your own contact entry. </p>
+</div>
+
+<section class="">
+    <div class="dashboard">
+        <div class="container-fluid">
+            <a href="#">
+                <button class="btn_green btn_green_flex" type="button"> Add Contact </button>
+            </a>
+            <div class="content_box pb-5">
+                <div class="row">
+                    <div class="col-12 col-md-8">
+                        <h3>Contacts</h3>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form_box">
+                            <form method="post">
+                                <input type="text" name="" placeholder="" class="form-control">
+                                <button type="submit"><img src=".../assets/images/search.svg" alt="#"></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="table_wrap" style="border: 0;">
+                    <table class="table table2">
+                        <thead>
+                            <tr>
+                                <th style="background: #CCDCD1;">User</th>
+                                <th style="background: #CCDCD1;">Role</th>
+                                <th style="background: #CCDCD1;">Status</th>
+                                <th style="background: #CCDCD1;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="customer_flex">
+                                        <img src="./assets/images/customer.png" alt="#">
+                                        <div class="text">Mr. Chris Kenning</div>
+                                    </div>
+                                </td>
+                                <td class="black">
+                                    <b>Solicitor</b>
+                                </td>
+                                <td class="green">
+                                    <b>Live</b>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_white" type="button">View</button>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_green" type="button">Delete</button>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="customer_flex">
+                                        <img src="./assets/images/customer.png" alt="#">
+                                        <div class="text">Mr. Chris Kenning</div>
+                                    </div>
+                                </td>
+                                <td class="black">
+                                    <b>Estate Agent</b>
+                                </td>
+                                <td class="red">
+                                    <b>Inactive</b>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_white" type="button">View</button>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_green" type="button">Delete</button>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="customer_flex">
+                                        <img src="./assets/images/customer.png" alt="#">
+                                        <div class="text">Mr. Chris Kenning</div>
+                                    </div>
+                                </td>
+                                <td class="black">
+                                    <b>Solicitor</b>
+                                </td>
+                                <td class="green">
+                                    <b>Live</b>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_white" type="button">View</button>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_green" type="button">Delete</button>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="customer_flex">
+                                        <img src="./assets/images/customer.png" alt="#">
+                                        <div class="text">Mr. Chris Kenning</div>
+                                    </div>
+                                </td>
+                                <td class="black">
+                                    <b>Estate Agent</b>
+                                </td>
+                                <td class="red">
+                                    <b>Inactive</b>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_white" type="button">View</button>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_green" type="button">Delete</button>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="customer_flex">
+                                        <img src="./assets/images/customer.png" alt="#">
+                                        <div class="text">Mr. Chris Kenning</div>
+                                    </div>
+                                </td>
+                                <td class="black">
+                                    <b>Solicitor</b>
+                                </td>
+                                <td class="green">
+                                    <b>Live</b>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_white" type="button">View</button>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_green" type="button">Delete</button>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="customer_flex">
+                                        <img src="./assets/images/customer.png" alt="#">
+                                        <div class="text">Mr. Chris Kenning</div>
+                                    </div>
+                                </td>
+                                <td class="black">
+                                    <b>Estate Agent</b>
+                                </td>
+                                <td class="red">
+                                    <b>Inactive</b>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_white" type="button">View</button>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_green" type="button">Delete</button>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="customer_flex">
+                                        <img src="./assets/images/customer.png" alt="#">
+                                        <div class="text">Mr. Chris Kenning</div>
+                                    </div>
+                                </td>
+                                <td class="black">
+                                    <b>Solicitor</b>
+                                </td>
+                                <td class="green">
+                                    <b>Live</b>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_white" type="button">View</button>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_green" type="button">Delete</button>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="customer_flex">
+                                        <img src="./assets/images/customer.png" alt="#">
+                                        <div class="text">Mr. Chris Kenning</div>
+                                    </div>
+                                </td>
+                                <td class="black">
+                                    <b>Estate Agent</b>
+                                </td>
+                                <td class="red">
+                                    <b>Inactive</b>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_white" type="button">View</button>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <button class="btn_green" type="button">Delete</button>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
