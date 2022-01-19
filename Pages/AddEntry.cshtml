@@ -3,3 +3,41 @@
 @{
     ViewData["Title"] = "Add Entry";
 }
+<div class="text-center">
+    <h1 class="display-4">Add a Entry to a Phone Book</h1>
+    <p>You can add multiple entries to a phone books go ahead and create an entry into the phone book of your choice.</p>
+</div>
+<section>
+    <div class="dashboard">
+        <div class="container-fluid">
+            <div class="content_box profile_wrap mt-0 p-0">
+                <form method="post" class="appointment_wrap">
+                    <div class="row">
+                        <div class="col-12 col-md-12">
+                            <h4>Phone Book</h4>
+                            <select class="form-control" asp-items="Model.listOfPhoneBooks" asp-for="selectedPhoneBookId">
+                                <option value="">Select a phone Book</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-6 col-md-6">
+                            <h4>Entry Name</h4>
+                            <input type="text" asp-for="entryName" class="form-control">
+                        </div>
+                        <div class="col-6 col-md-6">
+                            <h4>Entry Name</h4>
+                            <input type="text" asp-for="entryNumber" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <button class="btn_green mt-0" type="submit">Add Entry</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
