@@ -1,14 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using PhoneBook.Models;
-using System.Data;
 using System.Collections;
-
 
 namespace PhoneBook.Pages
 {
@@ -16,30 +9,42 @@ namespace PhoneBook.Pages
     {
         [BindProperty]
         public string phoneBookName {get; set;}
+        public string errorMessage { get; set; }
 
-        public void OnGet()
+        public IActionResult OnPost()
         {
-
-        }
-
-        public void OnPost()
-        {
-            InsertPhoneBook();
-            //Call API here
             //Insert phone book
+            var isBookInserted = InsertPhoneBook();
+            if (isBookInserted)
+            {
+                return Redirect("./Index");
+            }
+            else
+            {
+                errorMessage = "Oops! Something went wrong when adding a phone book.";
+                return Page();
+            }
+            //TODO :: Call API here            
         }
 
-        public void InsertPhoneBook()
+        public bool InsertPhoneBook()
         {
             var parameters = new Hashtable()
             {
                 {"@PhoneBookName", phoneBookName },
-                { "@PhoneBookID", new Guid() }
+                { "@PhoneBookID", Guid.NewGuid() }
             };
             try
-            {
-                var insertedPhoneBook = DAL.ExecuteScalarSP("InsertPhoneBook", parameters).ToString(); 
-              
+            {                
+                var phoneBookInserted = DAL.ExecuteScalarSP("InsertPhoneBook", parameters).ToString();
+                if (!string.IsNullOrWhiteSpace(phoneBookInserted))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception ex)
             {

@@ -7,21 +7,20 @@
     <h1 class="display-4">Add a Phone Book</h1>
     <p>You can add multiple phone books go ahead and create a phone book.</p>
 </div>
-<section class=""> 
+<section>
     <div class="dashboard">
         <div class="container-fluid">
             <div class="content_box profile_wrap mt-0 p-0">
                 <form method="post" class="appointment_wrap">
-                    <div class="row justify-content-between">
-                        <div class="col-12 col-md-11">
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <h4>Phone Book Name</h4>
-                                    <input type="text" name="" class="form-control">
-                                    <input type="submit" value="Add Phone Book" />
-
-                                </div>
-                            </div>
+                    <div class="row">
+                        <div class="col-12 col-md-12">
+                            <h4>Phone Book Name</h4>
+                            <input type="text" asp-for="phoneBookName" class="form-control">
+                            <input type="submit" value="Add Phone Book" />
+                            @if (!string.IsNullOrWhiteSpace(Model.errorMessage))
+                            {
+                                <p>Model.errorMessage</p>
+                            }
                         </div>
                     </div>
                 </form>
