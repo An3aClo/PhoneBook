@@ -17,11 +17,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PhoneBook.Controllers
 {
-    [Route("Api/Entry/[controller]")]
+    
     [ApiController]
+    [Route("Api/[controller]")]
     public class Entry : ControllerBase
     {
-        [HttpPost, Route("GetEntry")]
+        [HttpGet, Route("GetEntry")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
