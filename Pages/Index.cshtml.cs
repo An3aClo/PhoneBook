@@ -14,47 +14,40 @@ namespace PhoneBook.Pages
     public class IndexModel : PageModel
     {
         [BindProperty]
-        public List<PhoneBookObject> allPhoneBooks { get; set; }
+        public List<PhoneBookObject> AllPhoneBooks { get; set; }
 
         [BindProperty]
-        public List<EntryObject> allPhoneBookEntries { get; set; }
+        public List<EntryObject> AllPhoneBookEntries { get; set; }
 
         [BindProperty]
-        public PhoneBookObject selectedPhoneBook { get; set; }
+        public PhoneBookObject SelectedPhoneBook { get; set; }
 
         [BindProperty]
-        public string searchString { get; set; }
-        
-
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
+        public string SearchString { get; set; }  
 
         public void OnGet()
         {
+            //TODO :: Call API here  
             //Fetch all phone books
             GetPhoneBooks();
-            if (allPhoneBooks.Count>0)
+            if (AllPhoneBooks.Count>0)
             {
-                selectedPhoneBook = allPhoneBooks.First();
+                SelectedPhoneBook = AllPhoneBooks.First();
                 //Fetch all contacts of phone books
-                GetAllContacts(selectedPhoneBook.PhoneBookID);
+                GetAllContacts(SelectedPhoneBook.PhoneBookID);
             }
         }
 
         public void OnPostFetchPhoneBookContact(Guid phoneBookId)
         {
             GetPhoneBooks();
-            selectedPhoneBook = allPhoneBooks.Find(b => b.PhoneBookID == phoneBookId);
+            SelectedPhoneBook = AllPhoneBooks.Find(b => b.PhoneBookID == phoneBookId);
             GetAllContacts(phoneBookId);
         }
 
         public void GetPhoneBooks()
         {
-            allPhoneBooks = new List<PhoneBookObject>();
+            AllPhoneBooks = new List<PhoneBookObject>();
             try
             {
                 DataRowCollection rows = DAL.ExecuteSP("GetAllPhoneBooks").Tables[0].Rows;
@@ -67,7 +60,7 @@ namespace PhoneBook.Pages
                             PhoneBookID = Guid.Parse(row["PhoneBookID"].ToString()),
                             PhoneBookName = row["PhoneBookName"].ToString(),
                         };
-                        allPhoneBooks.Add(phoneBook);
+                        AllPhoneBooks.Add(phoneBook);
                     }
                 }
             }
@@ -79,7 +72,7 @@ namespace PhoneBook.Pages
 
         public void GetAllContacts( Guid phoneBookId)
         {
-            allPhoneBookEntries = new List<EntryObject>();
+            AllPhoneBookEntries = new List<EntryObject>();
             var parameters = new Hashtable()
             {
                 {"@PhoneBookID", phoneBookId }
@@ -96,7 +89,7 @@ namespace PhoneBook.Pages
                             EntryName =  row["EntryName"].ToString(),
                             EntryNumber = row["EntryNumber"].ToString()
                         };
-                        allPhoneBookEntries.Add(entry);
+                        AllPhoneBookEntries.Add(entry);
                     }
                 }
             }
@@ -108,10 +101,10 @@ namespace PhoneBook.Pages
 
         public void OnPostSearch( )
         {
-            if (!string.IsNullOrWhiteSpace(searchString))
+            if (!string.IsNullOrWhiteSpace(SearchString))
             {
                 //filter data
-                allPhoneBookEntries = (List<EntryObject>)allPhoneBookEntries.Where(s => s.EntryName.Contains(searchString) || s.EntryNumber.Contains(searchString));
+                AllPhoneBookEntries = (List<EntryObject>)AllPhoneBookEntries.Where(s => s.EntryName.Contains(SearchString) || s.EntryNumber.Contains(SearchString));
             }
         }
     }

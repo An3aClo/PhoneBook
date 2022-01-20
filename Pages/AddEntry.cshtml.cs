@@ -11,17 +11,16 @@ namespace PhoneBook.Pages
     public class AddEntryModel : PageModel
     {
         [BindProperty]
-        public string entryName { get; set; }
+        public string EntryName { get; set; }
         [BindProperty]
-        public string entryNumber { get; set; }
+        public string EntryNumber { get; set; }
 
-        public string errorMessage { get; set; }
-
+        public string ErrorMessage { get; set; }
 
         [BindProperty]
-        public string selectedPhoneBookId { get; set; }
+        public string SelectedPhoneBookId { get; set; }
 
-        public List<PhoneBookObject> allPhoneBooks { get; set; }
+        public List<PhoneBookObject> AllPhoneBooks { get; set; }
 
         public void OnGet()
         {
@@ -31,6 +30,7 @@ namespace PhoneBook.Pages
 
         public IActionResult OnPost()
         {
+            //TODO :: Call API here
             //Insert phone book entry 
             var isentryInserted = InsertEntry();
             if (isentryInserted)
@@ -39,20 +39,20 @@ namespace PhoneBook.Pages
             }
             else
             {
-                errorMessage = "Oops! Something went wrong when adding the an entry..";
+                ErrorMessage = "Oops! Something went wrong when adding the an entry..";
                 return Page();
-            }
-            //TODO :: Call API here
+            }            
         }
 
+        //TODO :: Move this method to API
         public bool InsertEntry()
         {
             var parameters = new Hashtable()
             {
                 {"@EntryID", Guid.NewGuid() },
-                { "@EntryName", entryName },
-                { "@EntryNumber", entryNumber },
-                { "@PhoneBookId", selectedPhoneBookId }   
+                { "@EntryName", EntryName },
+                { "@EntryNumber", EntryNumber },
+                { "@PhoneBookId", SelectedPhoneBookId }   
             };
             try
             {
@@ -72,9 +72,10 @@ namespace PhoneBook.Pages
             }
         }
 
+        //TODO :: Move this method to API
         public void GetPhoneBooks()
         {
-            allPhoneBooks = new List<PhoneBookObject>();
+            AllPhoneBooks = new List<PhoneBookObject>();
             try
             {
                 DataRowCollection rows = DAL.ExecuteSP("GetAllPhoneBooks").Tables[0].Rows;
@@ -87,7 +88,7 @@ namespace PhoneBook.Pages
                             PhoneBookID = Guid.Parse(row["PhoneBookID"].ToString()),
                             PhoneBookName = row["PhoneBookName"].ToString(),
                         };
-                        allPhoneBooks.Add(phoneBook);
+                        AllPhoneBooks.Add(phoneBook);
                     }
                 }
             }

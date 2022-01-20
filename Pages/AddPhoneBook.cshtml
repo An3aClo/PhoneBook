@@ -15,14 +15,14 @@
                     <div class="row">
                         <div class="col-12 col-md-12">
                             <h4>Phone Book Name</h4>
-                            <input type="text" asp-for="phoneBookName" class="form-control">                           
+                            <input type="text" asp-for="PhoneBookName" class="form-control">                           
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-4">
                             <button class="btn_green mt-0" type="submit">ADD PHONE BOOK</button>
                         </div>
-                        @if (!string.IsNullOrWhiteSpace(Model.errorMessage))
+                        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
                         {
                             <p>Model.errorMessage</p>
                         }

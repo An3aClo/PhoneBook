@@ -8,11 +8,12 @@ namespace PhoneBook.Pages
     public class AddPhoneBookModel : PageModel
     {
         [BindProperty]
-        public string phoneBookName {get; set;}
-        public string errorMessage { get; set; }
+        public string PhoneBookName {get; set;}
+        public string ErrorMessage { get; set; }
 
         public IActionResult OnPost()
         {
+            //TODO :: Call API here  
             //Insert phone book
             var isBookInserted = InsertPhoneBook();
             if (isBookInserted)
@@ -21,17 +22,17 @@ namespace PhoneBook.Pages
             }
             else
             {
-                errorMessage = "Oops! Something went wrong when adding a phone book.";
+                ErrorMessage = "Oops! Something went wrong when adding a phone book.";
                 return Page();
-            }
-            //TODO :: Call API here            
+            }                      
         }
 
+        //TODO :: Move to API  
         public bool InsertPhoneBook()
         {
             var parameters = new Hashtable()
             {
-                {"@PhoneBookName", phoneBookName },
+                {"@PhoneBookName", PhoneBookName },
                 { "@PhoneBookID", Guid.NewGuid() }
             };
             try
