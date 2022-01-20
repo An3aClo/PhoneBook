@@ -10,6 +10,7 @@ using System.Data;
 using System.Collections;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Text;
 
 namespace PhoneBook.Pages
 {
@@ -24,9 +25,12 @@ namespace PhoneBook.Pages
         [BindProperty]
         public PhoneBookObject SelectedPhoneBook { get; set; }
 
-        [BindProperty]
-        public string SearchString { get; set; }  
+        //[BindProperty]
+        //public string SearchString { get; set; }  
 
+        /// <summary>
+        /// This is the method which gets executed on page load
+        /// </summary>
         public void OnGet()
         {
             //Fetch all phone books 
@@ -34,56 +38,34 @@ namespace PhoneBook.Pages
             
             if (AllPhoneBooks.Count>0)
             {
+                //Set default PhoneBook
                 SelectedPhoneBook = AllPhoneBooks.First();
                 //Fetch all contacts of phone books
-                GetAllContacts(SelectedPhoneBook.PhoneBookID);
+                var phoneBookDetail = new PhoneBookDetail
+                {
+                    PhoneBookId = SelectedPhoneBook.PhoneBookID
+                };
+                AllPhoneBookEntries = GetAllEntriesAPICall(phoneBookDetail).Result;
             }
         }
 
+        /// <summary>
+        /// This method execute every time when one of the phone book buttons are clicked to get the new set of entries for a phone book
+        /// </summary>
+        /// <param name="phoneBookId"></param>
         public void OnPostFetchPhoneBookContact(Guid phoneBookId)
         {
+            //Fetch all the phone books
             AllPhoneBooks = GetPhoneBooksAPICall().Result;
+            //Make the chosen phone book the selected book
             SelectedPhoneBook = AllPhoneBooks.Find(b => b.PhoneBookID == phoneBookId);
-            GetAllContacts(phoneBookId);
-        }     
-
-        public void GetAllContacts( Guid phoneBookId)
-        {
-            AllPhoneBookEntries = new List<EntryObject>();
-            var parameters = new Hashtable()
+            //Fetch all contacts of phone books
+            var phoneBookDetail = new PhoneBookDetail
             {
-                {"@PhoneBookID", phoneBookId }
+                PhoneBookId = SelectedPhoneBook.PhoneBookID
             };
-            try
-            {
-                DataRowCollection rows = DAL.ExecuteSP("GetEntry", parameters).Tables[0].Rows;
-                if (rows.Count > 0)
-                {
-                    foreach (DataRow row in rows)
-                    {
-                        var entry = new EntryObject()
-                        {
-                            EntryName =  row["EntryName"].ToString(),
-                            EntryNumber = row["EntryNumber"].ToString()
-                        };
-                        AllPhoneBookEntries.Add(entry);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-
-        public void OnPostSearch( )
-        {
-            if (!string.IsNullOrWhiteSpace(SearchString))
-            {
-                //filter data
-                AllPhoneBookEntries = (List<EntryObject>)AllPhoneBookEntries.Where(s => s.EntryName.Contains(SearchString) || s.EntryNumber.Contains(SearchString));
-            }
-        }
+            AllPhoneBookEntries = GetAllEntriesAPICall(phoneBookDetail).Result;
+        }        
 
         /// <summary>
         /// This methods makes and API call to fetch all the phone books
@@ -117,5 +99,49 @@ namespace PhoneBook.Pages
             return JsonConvert.DeserializeObject<List<PhoneBookObject>>(response);
         }
 
+        /// <summary>
+        /// This method makes an API call to get all the entries for a specific phone book
+        /// </summary>
+        /// <param name="phoneBookDetail">This is an object containing the id of the phone book</param>
+        /// <returns>List<EntryObject></returns>
+        public async Task<List<EntryObject>> GetAllEntriesAPICall (PhoneBookDetail phoneBookDetail)
+        {
+            var payload = JsonConvert.SerializeObject(phoneBookDetail);
+            HttpMethod method = HttpMethod.Get;
+            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var URL = "https://localhost:44338/Api/Entry/GetEntry";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var response = string.Empty;
+
+            var httpClientHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+                {
+                    return true;
+                }
+            };
+            using (var client = new HttpClient(httpClientHandler))
+            using (var request = new HttpRequestMessage(method, URL))
+            {
+                request.Content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage res = client.SendAsync(request).Result)
+                {
+                    using (HttpContent content = res.Content)
+                    {
+                        response = await content.ReadAsStringAsync();
+                    }
+                }
+            }
+            return JsonConvert.DeserializeObject<List<EntryObject>>(response);
+        }
+
+        //public void OnPostSearch()
+        //{
+        //    if (!string.IsNullOrWhiteSpace(SearchString))
+        //    {
+        //        //filter data
+        //        AllPhoneBookEntries = (List<EntryObject>)AllPhoneBookEntries.Where(s => s.EntryName.Contains(SearchString) || s.EntryNumber.Contains(SearchString));
+        //    }
+        //}
     }
 }

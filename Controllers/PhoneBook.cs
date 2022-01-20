@@ -47,7 +47,6 @@ namespace PhoneBook.Controllers
             catch (Exception ex)
             {
                 throw;
-                return null;
             }
         }
     }
