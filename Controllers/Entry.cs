@@ -36,6 +36,18 @@ namespace PhoneBook.Controllers
             return GetAllEntries();
         }
 
+        [HttpPost, Route("InsertEntry")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public bool InsertEntryPost([FromBody] EntryFormBody entry)
+        {
+            return InsertEntry(entry);
+        }
+
         public List<EntryObject> GetAllEntriesForPhoneBooks(Guid phoneBookId)
         {
             List<EntryObject> allPhoneBookEntries = new List<EntryObject>();
@@ -85,6 +97,33 @@ namespace PhoneBook.Controllers
                     }
                 }
                 return allEntries;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public bool InsertEntry(EntryFormBody entry)
+        {
+            var parameters = new Hashtable()
+            {
+                {"@EntryID", Guid.NewGuid() },
+                { "@EntryName", entry.EntryName },
+                { "@EntryNumber", entry.EntryNumber },
+                { "@PhoneBookId", entry.SelectedPhoneBookId }
+            };
+            try
+            {
+                var entryInserted = DAL.ExecuteScalarSP("InsertEntry", parameters).ToString();
+                if (!string.IsNullOrWhiteSpace(entryInserted))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception ex)
             {

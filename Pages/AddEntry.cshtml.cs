@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using PhoneBook.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PhoneBook.Pages
 {
@@ -25,14 +27,19 @@ namespace PhoneBook.Pages
         public void OnGet()
         {
             //Fetch all phone books
-            GetPhoneBooks();
+            AllPhoneBooks = GetPhoneBooksAPICall().Result;
         }
 
         public IActionResult OnPost()
         {
-            //TODO :: Call API here
             //Insert phone book entry 
-            var isentryInserted = InsertEntry();
+            var entryDetail = new EntryFormBody
+            {
+                EntryName = EntryName,
+                EntryNumber = EntryNumber,
+                SelectedPhoneBookId = SelectedPhoneBookId
+            };
+            var isentryInserted =  Convert.ToBoolean(InsertEntryAPICall(entryDetail).Result);
             if (isentryInserted)
             {
                 return Redirect("./Index");
@@ -44,58 +51,72 @@ namespace PhoneBook.Pages
             }            
         }
 
-        //TODO :: Move this method to API
-        public bool InsertEntry()
+        /// <summary>
+        /// This method makes and API call to insert an entry
+        /// </summary>
+        /// <param name="entryDetail"></param>
+        /// <returns>string</returns>
+        public async Task<string> InsertEntryAPICall(EntryFormBody entryDetail)
         {
-            var parameters = new Hashtable()
+            var payload = JsonConvert.SerializeObject(entryDetail);
+            HttpMethod method = HttpMethod.Post;
+            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var URL = "https://localhost:44338/Api/Entry/InsertEntry";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var response = string.Empty;
+
+            var httpClientHandler = new HttpClientHandler
             {
-                {"@EntryID", Guid.NewGuid() },
-                { "@EntryName", EntryName },
-                { "@EntryNumber", EntryNumber },
-                { "@PhoneBookId", SelectedPhoneBookId }   
-            };
-            try
-            {
-                var entryInserted = DAL.ExecuteScalarSP("InsertEntry", parameters).ToString();
-                if (!string.IsNullOrWhiteSpace(entryInserted))
+                ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
                 {
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception ex)
+            };
+            using (var client = new HttpClient(httpClientHandler))
+            using (var request = new HttpRequestMessage(method, URL))
             {
-                throw;
-            }
-        }
+                request.Content = new StringContent(payload, Encoding.UTF8, "application/json");
 
-        //TODO :: Move this method to API
-        public void GetPhoneBooks()
-        {
-            AllPhoneBooks = new List<PhoneBookObject>();
-            try
-            {
-                DataRowCollection rows = DAL.ExecuteSP("GetAllPhoneBooks").Tables[0].Rows;
-                if (rows.Count > 0)
+                using (HttpResponseMessage res = client.SendAsync(request).Result)
                 {
-                    foreach (DataRow row in rows)
+                    using (HttpContent content = res.Content)
                     {
-                        var phoneBook = new PhoneBookObject()
-                        {
-                            PhoneBookID = Guid.Parse(row["PhoneBookID"].ToString()),
-                            PhoneBookName = row["PhoneBookName"].ToString(),
-                        };
-                        AllPhoneBooks.Add(phoneBook);
+                        response = await content.ReadAsStringAsync();
                     }
                 }
             }
-            catch (Exception ex)
+            return response;
+        }
+
+        /// <summary>
+        /// This methods makes and API call to fetch all the phone books
+        /// </summary>
+        /// <returns>List<PhoneBookObject></returns>
+        public async Task<List<PhoneBookObject>> GetPhoneBooksAPICall()
+        {
+            HttpMethod method = HttpMethod.Get;
+            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var URL = "https://localhost:44338/Api/PhoneBook/GetPhoneBooks";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var response = string.Empty;
+
+            var httpClientHandler = new HttpClientHandler
             {
-                throw;
+                ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+                {
+                    return true;
+                }
+            };
+            using (var client = new HttpClient(httpClientHandler))
+            using (var request = new HttpRequestMessage(method, URL))
+            {
+                using (HttpResponseMessage res = client.SendAsync(request).Result)
+                {
+                    using (HttpContent content = res.Content)
+                    {
+                        response = await content.ReadAsStringAsync();
+                    }
+                }
             }
+            return JsonConvert.DeserializeObject<List<PhoneBookObject>>(response);
         }
     }
 }
