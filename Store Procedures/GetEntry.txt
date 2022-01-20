@@ -1,0 +1,22 @@
+﻿USE [CIB Digital Tech Assessment]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:Andrea Cloete
+-- Create date:2022/01/20 21:24:17
+-- Description: Fetch All entries from Entry table whete phone book id matches
+-- =============================================
+ALTER PROCEDURE [dbo].[GetEntry]
+@PhoneBookID uniqueidentifier = null
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from interfering with SELECT statements.
+	SET NOCOUNT ON;
+	IF (@PhoneBookID is not null)
+	BEGIN
+		SELECT * FROM Entry WHERE PhoneBookID = @PhoneBookID;
+	END
+END

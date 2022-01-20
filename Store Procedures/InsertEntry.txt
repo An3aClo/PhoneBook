@@ -1,0 +1,42 @@
+﻿USE [CIB Digital Tech Assessment]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:Andrea Cloete
+-- Create date:2022/01/20 21:24:18
+-- Description:Insert an entry record
+-- =============================================
+ALTER PROCEDURE [dbo].[InsertEntry]
+@EntryName nchar(255) = null,
+@EntryNumber nchar(255) = null,
+@EntryID uniqueidentifier = null,
+@PhoneBookId uniqueidentifier = null
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from interfering with SELECT statements.
+	SET NOCOUNT ON;
+		IF (@EntryName IS NOT NULL AND
+		@EntryNumber IS NOT NULL AND
+		@EntryID IS NOT NULL AND
+		@PhoneBookId IS NOT NULL)
+	BEGIN
+	  insert into Entry 
+	  (
+		  EntryID,
+		  EntryName,
+		  EntryNumber,
+		  PhoneBookID
+	  )
+	  values
+	  (
+		  @EntryID, 
+		  @EntryName,
+		  @EntryNumber,
+		  @PhoneBookId
+	  )
+	  SELECT EntryID FROM Entry WHERE EntryID = @EntryID
+	END
+END

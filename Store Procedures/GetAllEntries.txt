@@ -1,0 +1,21 @@
+﻿USE [CIB Digital Tech Assessment]
+GO
+/****** Object:  StoredProcedure [dbo].[GetAllEntries]    Script Date: 2022/01/20 21:24:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:Andrea Cloete
+-- Create date:2022/01/20 21:24:15
+-- Description:Fetch all entries from entry table
+-- =============================================
+ALTER PROCEDURE [dbo].[GetAllEntries]
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    Select * from Entry
+END

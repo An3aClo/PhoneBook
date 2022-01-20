@@ -1,0 +1,20 @@
+﻿USE [CIB Digital Tech Assessment]
+GO
+/****** Object:  StoredProcedure [dbo].[GetAllPhoneBooks]    Script Date: 2022/01/20 21:24:16 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:Andrea Cloete
+-- Create date:2022/01/20 21:24:16
+-- Description: Get all phon book records from 
+	-- the phone book table
+-- =============================================
+ALTER PROCEDURE [dbo].[GetAllPhoneBooks]
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT * from PhoneBook
+END

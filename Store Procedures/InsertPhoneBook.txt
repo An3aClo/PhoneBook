@@ -1,0 +1,33 @@
+﻿USE [CIB Digital Tech Assessment]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:Andrea Cloete
+-- Create date:2022/01/20 21:24:20
+-- Description:Insert a phone book record
+-- =============================================
+ALTER PROCEDURE [dbo].[InsertPhoneBook]
+@PhoneBookName nchar(255) = null,
+@PhoneBookID uniqueidentifier = null
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from interfering with SELECT statements.
+	SET NOCOUNT ON;
+	IF (@PhoneBookName IS NOT NULL AND @PhoneBookID IS NOT NULL)
+	BEGIN
+	  insert into PhoneBook 
+	  (
+		  [PhoneBookID],
+		  [PhoneBookName]
+	  )
+	  values
+	  (
+		  @PhoneBookID, 
+		  @PhoneBookName
+	  )
+	  SELECT [PhoneBookID] FROM PhoneBook WHERE PhoneBookID = @PhoneBookID
+	END
+END
