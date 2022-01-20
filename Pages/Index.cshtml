@@ -5,7 +5,7 @@
 }
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>This is a add multiple phone books with contacts as you please </p>
+    <p>Never lose a contact again! Add your phone book and save contacts to your phone book. </p>
 </div>
 <form method="post">
     <section class="">
@@ -16,19 +16,12 @@
                         <h3>Your Phone Books</h3>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-md-12">
-                        <div class="form_box">
-                            <ul>
-                                @foreach (var phoneBook in Model.allPhoneBooks)
-                                {
-                                    <input type="submit" value="@phoneBook.PhoneBookName"
-                                           asp-page-handler="FetchPhoneBookContact" asp-route-phoneBookId="@phoneBook.PhoneBookID" />
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                @foreach (var phoneBook in Model.allPhoneBooks)
+                {
+                    <button asp-page-handler="FetchPhoneBookContact" asp-route-phoneBookId="@phoneBook.PhoneBookID" class="btn_green mt-0" type="submit">
+                        @phoneBook.PhoneBookName
+                    </button>
+                }
                 <div class="content_box pb-5">
                     <div class="row">
                         <div class="col-12 col-md-6">
@@ -38,12 +31,12 @@
                             }
                         </div>
                         <div class="col-12 col-md-6">
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col-8 col-md-8">
                                     <input id="searchInput" asp-for="@Model.searchString" type="text" name="" placeholder="Enter your search value here" class="form-control">
                                 </div>
                                 <div class="col-4 col-md-4">
-                                    <button asp-page-handler="Search" class="btn_green mt-0" type="submit">SEARCH</button>
+                                    <button asp-page-handler="Search" class="btn_green mt-0" type="submit" style=" padding: 0.50rem 1.25rem;">SEARCH</button>
                                 </div>
                                 @Model.searchString
                             </div>
@@ -60,23 +53,33 @@
                             <tbody>
                                 @{ if (Model.allPhoneBookEntries != null)
                                     {
-                                        foreach (var entry in Model.allPhoneBookEntries)
+                                        if (Model.allPhoneBookEntries.Count > 0)
+                                        {
+                                            foreach (var entry in Model.allPhoneBookEntries)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="customer_flex">
+                                                            <div class="text">@entry.EntryName</div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="black">
+                                                        <b>@entry.EntryNumber</b>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
                                         {
                                             <tr>
                                                 <td>
                                                     <div class="customer_flex">
-                                                        <div class="text">@entry.EntryName</div>
+                                                        <div class="text">No entries found for the phone book. <a href="/AddEntry">Click here to add an entry</a></div>
                                                     </div>
                                                 </td>
-                                                <td class="black">
-                                                    <b>@entry.EntryNumber</b>
-                                                </td>
+                                                <td class="black"></td>
                                             </tr>
                                         }
-                                    }
-                                    else
-                                    {
-                                        <p>No entries found</p>
                                     }
                                 }
                             </tbody>
