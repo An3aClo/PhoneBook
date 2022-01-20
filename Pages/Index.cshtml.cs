@@ -165,6 +165,9 @@ namespace PhoneBook.Pages
             return JsonConvert.DeserializeObject<List<EntryObject>>(response);
         }
 
+        /// <summary>
+        /// This method fetches all entries no matter what book and search the list based on the input value
+        /// </summary>
         public void OnPost()
         {
             if (!string.IsNullOrWhiteSpace(SearchTerm))

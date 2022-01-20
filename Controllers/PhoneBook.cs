@@ -24,6 +24,43 @@ namespace PhoneBook.Controllers
             return GetPhoneBooks();
         }
 
+        [HttpPost, Route("InsertPhoneBook")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public bool InsertPhoneBookPost([FromBody] PhoneBookFormBody phoneBook)
+        {
+            return InsertPhoneBook(phoneBook.PhoneBookName);
+        }
+
+        public bool InsertPhoneBook(string PhoneBookName)
+        {
+            var parameters = new Hashtable()
+            {
+                {"@PhoneBookName", PhoneBookName},
+                {"@PhoneBookID", Guid.NewGuid()}
+            };
+            try
+            {
+                var phoneBookInserted = DAL.ExecuteScalarSP("InsertPhoneBook", parameters).ToString();
+                if (!string.IsNullOrWhiteSpace(phoneBookInserted))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public List<PhoneBookObject> GetPhoneBooks()
         {
             List<PhoneBookObject> allPhoneBooks = new List<PhoneBookObject>();

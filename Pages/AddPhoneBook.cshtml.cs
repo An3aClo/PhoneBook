@@ -1,7 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using PhoneBook.Models;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace PhoneBook.Pages
 {
@@ -12,10 +18,13 @@ namespace PhoneBook.Pages
         public string ErrorMessage { get; set; }
 
         public IActionResult OnPost()
-        {
-            //TODO :: Call API here  
+        { 
             //Insert phone book
-            var isBookInserted = InsertPhoneBook();
+            var phoneBookDetail = new PhoneBookFormBody
+            {
+                PhoneBookName = PhoneBookName
+            };
+            var isBookInserted = Convert.ToBoolean(InsertPhoneBook(phoneBookDetail).Result);
             if (isBookInserted)
             {
                 return Redirect("./Index");
@@ -27,30 +36,40 @@ namespace PhoneBook.Pages
             }                      
         }
 
-        //TODO :: Move to API  
-        public bool InsertPhoneBook()
+        /// <summary>
+        /// This method makes and API call to insert a phone book in the database
+        /// </summary>
+        /// <param name="phoneBookDetail"></param>
+        /// <returns>string</returns>
+        public async Task<string> InsertPhoneBook(PhoneBookFormBody phoneBookDetail)
         {
-            var parameters = new Hashtable()
+            var payload = JsonConvert.SerializeObject(phoneBookDetail);
+            HttpMethod method = HttpMethod.Post;
+            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var URL = "https://localhost:44338/Api/PhoneBook/InsertPhoneBook";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var response = string.Empty;
+
+            var httpClientHandler = new HttpClientHandler
             {
-                {"@PhoneBookName", PhoneBookName },
-                { "@PhoneBookID", Guid.NewGuid() }
-            };
-            try
-            {                
-                var phoneBookInserted = DAL.ExecuteScalarSP("InsertPhoneBook", parameters).ToString();
-                if (!string.IsNullOrWhiteSpace(phoneBookInserted))
+                ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
                 {
                     return true;
                 }
-                else
+            };
+            using (var client = new HttpClient(httpClientHandler))
+            using (var request = new HttpRequestMessage(method, URL))
+            {
+                request.Content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage res = client.SendAsync(request).Result)
                 {
-                    return false;
+                    using (HttpContent content = res.Content)
+                    {
+                        response = await content.ReadAsStringAsync();
+                    }
                 }
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return response;
         }
     }
 }
