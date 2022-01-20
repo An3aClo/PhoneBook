@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using PhoneBook.Models;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 
 namespace PhoneBook.Pages
 {
@@ -19,7 +17,6 @@ namespace PhoneBook.Pages
 
         public string errorMessage { get; set; }
 
-        public SelectList listOfPhoneBooks { get; set; }
 
         [BindProperty]
         public string selectedPhoneBookId { get; set; }
@@ -30,6 +27,49 @@ namespace PhoneBook.Pages
         {
             //Fetch all phone books
             GetPhoneBooks();
+        }
+
+        public IActionResult OnPost()
+        {
+            //Insert phone book entry 
+            var isentryInserted = InsertEntry();
+            if (isentryInserted)
+            {
+                return Redirect("./Index");
+            }
+            else
+            {
+                errorMessage = "Oops! Something went wrong when adding the an entry..";
+                return Page();
+            }
+            //TODO :: Call API here
+        }
+
+        public bool InsertEntry()
+        {
+            var parameters = new Hashtable()
+            {
+                {"@EntryID", Guid.NewGuid() },
+                { "@EntryName", entryName },
+                { "@EntryNumber", entryNumber },
+                { "@PhoneBookId", selectedPhoneBookId }   
+            };
+            try
+            {
+                var entryInserted = DAL.ExecuteScalarSP("InsertEntry", parameters).ToString();
+                if (!string.IsNullOrWhiteSpace(entryInserted))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public void GetPhoneBooks()
@@ -48,7 +88,6 @@ namespace PhoneBook.Pages
                             PhoneBookName = row["PhoneBookName"].ToString(),
                         };
                         allPhoneBooks.Add(phoneBook);
-                        listOfPhoneBooks = new SelectList(phoneBook.PhoneBookName, nameof(phoneBook.PhoneBookID));
                     }
                 }
             }

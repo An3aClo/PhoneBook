@@ -20,7 +20,7 @@ namespace PhoneBook.Pages
         public List<EntryObject> allPhoneBookEntries { get; set; }
 
         [BindProperty]
-        public PhoneBookObject defaultPhoneBook { get; set; }
+        public PhoneBookObject selectedPhoneBook { get; set; }
 
         [BindProperty]
         public string searchString { get; set; }
@@ -37,14 +37,18 @@ namespace PhoneBook.Pages
         {
             //Fetch all phone books
             GetPhoneBooks();
-            defaultPhoneBook = allPhoneBooks.First();
-
-            //Fetch all contacts of phone books
-            GetAllContacts(defaultPhoneBook.PhoneBookID);            
+            if (allPhoneBooks.Count>0)
+            {
+                selectedPhoneBook = allPhoneBooks.First();
+                //Fetch all contacts of phone books
+                GetAllContacts(selectedPhoneBook.PhoneBookID);
+            }
         }
 
         public void OnPostFetchPhoneBookContact(Guid phoneBookId)
         {
+            GetPhoneBooks();
+            selectedPhoneBook = allPhoneBooks.Find(b => b.PhoneBookID == phoneBookId);
             GetAllContacts(phoneBookId);
         }
 
@@ -102,7 +106,7 @@ namespace PhoneBook.Pages
             }
         }
 
-        public void OnPostSearch()
+        public void OnPostSearch( )
         {
             if (!string.IsNullOrWhiteSpace(searchString))
             {

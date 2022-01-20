@@ -22,7 +22,8 @@
                             <ul>
                                 @foreach (var phoneBook in Model.allPhoneBooks)
                                 {
-                                    <input type="submit" value="@phoneBook.PhoneBookName" asp-page-handler="FetchPhoneBookContact" asp-route-phoneBookId="@phoneBook.PhoneBookID" />
+                                    <input type="submit" value="@phoneBook.PhoneBookName"
+                                           asp-page-handler="FetchPhoneBookContact" asp-route-phoneBookId="@phoneBook.PhoneBookID" />
                                 }
                             </ul>
                         </div>
@@ -30,19 +31,26 @@
                 </div>
                 <div class="content_box pb-5">
                     <div class="row">
-                        <div class="col-12 col-md-8">
-                            <h3>@Model.defaultPhoneBook.PhoneBookName - Entries</h3>
+                        <div class="col-12 col-md-6">
+                            @if (Model.selectedPhoneBook != null)
+                            {
+                                <h3>@Model.selectedPhoneBook.PhoneBookName - Entries</h3>
+                            }
                         </div>
-                        <div class="col-12 col-md-4">
-                            <div class="form_box">
-                                <input asp-for="searchString" type="text" name="" placeholder="Enter your search value here" class="form-control">
-                                <input type="submit" value="Search" asp-page-handler="Search" />
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="col-8 col-md-8">
+                                    <input id="searchInput" asp-for="@Model.searchString" type="text" name="" placeholder="Enter your search value here" class="form-control">
+                                </div>
+                                <div class="col-4 col-md-4">
+                                    <button asp-page-handler="Search" class="btn_green mt-0" type="submit">SEARCH</button>
+                                </div>
                                 @Model.searchString
                             </div>
                         </div>
                     </div>
                     <div class="table_wrap" style="border: 0;">
-                        <table class="table table2">
+                        <table class="table table2"  id="entryTable">
                             <thead>
                                 <tr>
                                     <th style="background: #CCDCD1;">Name</th>
@@ -79,3 +87,36 @@
         </div>
     </section>
 </form>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+        $(function () {
+            $("#searchInput").keyup(function () {
+                GetEntry();
+            });
+        });
+        function GetEntry() {
+            var searchValue = $.trim($("#searchInput").val());
+            console.log(searchValue);
+            $.ajax({
+                type: "POST",
+                url: "/Search/SearchEntries",
+                data: "{searchString:'" + searchValue + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (entries) {
+                    console.log("In sucess");
+                    var table = $("#entryTable");
+                    table.find("tr:not(:first)").remove();
+                    $.each(entries, function (i, entry) {
+                        var table = $("#entryTable");
+                        var row = table[0].insertRow(-1);
+                        $(row).append("<td />");
+                        $(row).find("td").eq(0).html(entry.EntryName);
+                        $(row).append("<td />");
+                        $(row).find("td").eq(1).html(entry.Number);
+                        $(row).append("<td />");
+                    });
+                }
+            });
+        }
+</script>
