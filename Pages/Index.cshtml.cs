@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +24,11 @@ namespace PhoneBook.Pages
         [BindProperty]
         public PhoneBookObject SelectedPhoneBook { get; set; }
 
-        //[BindProperty]
-        //public string SearchString { get; set; }  
+        [BindProperty]
+        public string SearchString { get; internal set; }
+
+        [BindProperty]
+        public String SearchTerm { get; set; }
 
         /// <summary>
         /// This is the method which gets executed on page load
@@ -45,7 +47,7 @@ namespace PhoneBook.Pages
                 {
                     PhoneBookId = SelectedPhoneBook.PhoneBookID
                 };
-                AllPhoneBookEntries = GetAllEntriesAPICall(phoneBookDetail).Result;
+                AllPhoneBookEntries = GetAllEntriesForPhoneBookAPICall(phoneBookDetail).Result;
             }
         }
 
@@ -64,7 +66,7 @@ namespace PhoneBook.Pages
             {
                 PhoneBookId = SelectedPhoneBook.PhoneBookID
             };
-            AllPhoneBookEntries = GetAllEntriesAPICall(phoneBookDetail).Result;
+            AllPhoneBookEntries = GetAllEntriesForPhoneBookAPICall(phoneBookDetail).Result;
         }        
 
         /// <summary>
@@ -104,7 +106,7 @@ namespace PhoneBook.Pages
         /// </summary>
         /// <param name="phoneBookDetail">This is an object containing the id of the phone book</param>
         /// <returns>List<EntryObject></returns>
-        public async Task<List<EntryObject>> GetAllEntriesAPICall (PhoneBookDetail phoneBookDetail)
+        public async Task<List<EntryObject>> GetAllEntriesForPhoneBookAPICall (PhoneBookDetail phoneBookDetail)
         {
             var payload = JsonConvert.SerializeObject(phoneBookDetail);
             HttpMethod method = HttpMethod.Get;
@@ -135,13 +137,47 @@ namespace PhoneBook.Pages
             return JsonConvert.DeserializeObject<List<EntryObject>>(response);
         }
 
-        //public void OnPostSearch()
-        //{
-        //    if (!string.IsNullOrWhiteSpace(SearchString))
-        //    {
-        //        //filter data
-        //        AllPhoneBookEntries = (List<EntryObject>)AllPhoneBookEntries.Where(s => s.EntryName.Contains(SearchString) || s.EntryNumber.Contains(SearchString));
-        //    }
-        //}
+        public async Task<List<EntryObject>> GetAllEntriesAPICall()
+        {
+            HttpMethod method = HttpMethod.Get;
+            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var URL = "https://localhost:44338/Api/Entry/GetAllEntry";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var response = string.Empty;
+
+            var httpClientHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+                {
+                    return true;
+                }
+            };
+            using (var client = new HttpClient(httpClientHandler))
+            using (var request = new HttpRequestMessage(method, URL))
+            {
+                using (HttpResponseMessage res = client.SendAsync(request).Result)
+                {
+                    using (HttpContent content = res.Content)
+                    {
+                        response = await content.ReadAsStringAsync();
+                    }
+                }
+            }
+            return JsonConvert.DeserializeObject<List<EntryObject>>(response);
+        }
+
+        public void OnPost()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                //Fetch All entries
+                List<EntryObject> allEntries = GetAllEntriesAPICall().Result;
+
+                //Filter data
+                AllPhoneBookEntries = (List<EntryObject>)allEntries.FindAll(s => s.EntryName.Contains(SearchTerm) || s.EntryNumber.Contains(SearchTerm));
+
+                //Fetch all phone books 
+                AllPhoneBooks = GetPhoneBooksAPICall().Result;
+            }
+        }
     }
 }

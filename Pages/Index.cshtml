@@ -33,12 +33,19 @@
                         <div class="col-12 col-md-6">
                             <div class="row mt-3">
                                 <div class="col-8 col-md-8">
-                                    <input id="searchInput" asp-for="@Model.SearchString" type="text" name="" placeholder="Enter your search value here" class="form-control">
+                                    <input id="searchInput" asp-for="SearchTerm" placeholder="Enter your search value here" class="form-control">
                                 </div>
                                 <div class="col-4 col-md-4">
-                                    <button asp-page-handler="Search" class="btn_green mt-0" type="submit" style=" padding: 0.50rem 1.25rem;">SEARCH</button>
+                                    <button type="submit" class="btn_green mt-0" style=" padding: 0.50rem 1.25rem;">SEARCH</button>
                                 </div>
+
+                                @*<input class="form-control" asp-for="SearchTerm" />
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn primary">Search</button>
+                                </div>*@
+
                                 @*@Model.searchString*@
+
                             </div>
                         </div>
                     </div>
@@ -98,28 +105,72 @@
             });
         });
         function GetEntry() {
+            //Get the search string
             var searchValue = $.trim($("#searchInput").val());
             console.log(searchValue);
+
+            var searchObject = '{SearchValue: "' + searchValue + '" }';
+
+            //Make API
             $.ajax({
                 type: "POST",
-                url: "/Search/SearchEntries",
-                data: "{searchString:'" + searchValue + "'}",
+                url: "/Api/Search/SearchEntries",
+                data: searchObject,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (entries) {
-                    console.log("In sucess");
-                    var table = $("#entryTable");
-                    table.find("tr:not(:first)").remove();
-                    $.each(entries, function (i, entry) {
-                        var table = $("#entryTable");
-                        var row = table[0].insertRow(-1);
-                        $(row).append("<td />");
-                        $(row).find("td").eq(0).html(entry.EntryName);
-                        $(row).append("<td />");
-                        $(row).find("td").eq(1).html(entry.Number);
-                        $(row).append("<td />");
-                    });
+                success: function (response) {
+                    alert("Hello: " + response.Name + ".\nCurrent Date and Time: " + response.DateTime);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
                 }
             });
+
+
+
+
+
+
+
+
+
+
+            //$.ajax({
+            //    type: "POST",
+            //    contentType: "application/json; charset=utf-8",
+            //    url: "/Api/Search/SearchEntries",
+            //    data: searchObject,
+            //    success: function (result) {
+            //        console.log("In success");
+            //    }
+            //});
+
+
+
+            
+            //$.ajax({
+            //    type: "POST",
+            //    url: "/Api/Search/SearchEntries",
+            //    data: {searchString: searchValue},
+            //    contentType: "application/json; charset=utf-8",
+            //    dataType: "json",
+            //    success: function (result) {
+            //        console.log("In success");
+            //        //var table = $("#entryTable");
+            //        //table.find("tr:not(:first)").remove();
+            //        //$.each(entries, function (i, entry) {
+            //        //    var table = $("#entryTable");
+            //        //    var row = table[0].insertRow(-1);
+            //        //    $(row).append("<td />");
+            //        //    $(row).find("td").eq(0).html(entry.EntryName);
+            //        //    $(row).append("<td />");
+            //        //    $(row).find("td").eq(1).html(entry.Number);
+            //        //    $(row).append("<td />");
+            //        //});
+            //    }
+            //});
         }
 </script>*@
