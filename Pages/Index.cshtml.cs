@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PhoneBook.Models;
-using System.Data;
-using System.Collections;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;

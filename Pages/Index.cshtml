@@ -18,7 +18,7 @@
                 </div>
                 @foreach (var phoneBook in Model.AllPhoneBooks)
                 {
-                    <button asp-page-handler="FetchPhoneBookContact" asp-route-phoneBookId="@phoneBook.PhoneBookID" class="btn_green mt-0" type="submit">
+                    <button asp-page-handler="FetchPhoneBookContact" asp-route-phoneBookId="@phoneBook.PhoneBookID" class="btn_green mt-0 mb-3" type="submit">
                         @phoneBook.PhoneBookName
                     </button>
                 }
