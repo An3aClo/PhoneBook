@@ -38,14 +38,6 @@
                                 <div class="col-4 col-md-4">
                                     <button type="submit" class="btn_green mt-0" style=" padding: 0.50rem 1.25rem;">SEARCH</button>
                                 </div>
-
-                                @*<input class="form-control" asp-for="SearchTerm" />
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn primary">Search</button>
-                                </div>*@
-
-                                @*@Model.searchString*@
-
                             </div>
                         </div>
                     </div>
@@ -97,80 +89,3 @@
         </div>
     </section>
 </form>
-@*<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript">
-        $(function () {
-            $("#searchInput").keyup(function () {
-                GetEntry();
-            });
-        });
-        function GetEntry() {
-            //Get the search string
-            var searchValue = $.trim($("#searchInput").val());
-            console.log(searchValue);
-
-            var searchObject = '{SearchValue: "' + searchValue + '" }';
-
-            //Make API
-            $.ajax({
-                type: "POST",
-                url: "/Api/Search/SearchEntries",
-                data: searchObject,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    alert("Hello: " + response.Name + ".\nCurrent Date and Time: " + response.DateTime);
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
-            });
-
-
-
-
-
-
-
-
-
-
-            //$.ajax({
-            //    type: "POST",
-            //    contentType: "application/json; charset=utf-8",
-            //    url: "/Api/Search/SearchEntries",
-            //    data: searchObject,
-            //    success: function (result) {
-            //        console.log("In success");
-            //    }
-            //});
-
-
-
-            
-            //$.ajax({
-            //    type: "POST",
-            //    url: "/Api/Search/SearchEntries",
-            //    data: {searchString: searchValue},
-            //    contentType: "application/json; charset=utf-8",
-            //    dataType: "json",
-            //    success: function (result) {
-            //        console.log("In success");
-            //        //var table = $("#entryTable");
-            //        //table.find("tr:not(:first)").remove();
-            //        //$.each(entries, function (i, entry) {
-            //        //    var table = $("#entryTable");
-            //        //    var row = table[0].insertRow(-1);
-            //        //    $(row).append("<td />");
-            //        //    $(row).find("td").eq(0).html(entry.EntryName);
-            //        //    $(row).append("<td />");
-            //        //    $(row).find("td").eq(1).html(entry.Number);
-            //        //    $(row).append("<td />");
-            //        //});
-            //    }
-            //});
-        }
-</script>*@
