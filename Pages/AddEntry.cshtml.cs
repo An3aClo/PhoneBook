@@ -59,9 +59,8 @@ namespace PhoneBook.Pages
         public async Task<string> InsertEntryAPICall(EntryFormBody entryDetail)
         {
             var payload = JsonConvert.SerializeObject(entryDetail);
-            HttpMethod method = HttpMethod.Post;
-            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
-            var URL = "https://localhost:44338/Api/Entry/InsertEntry";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            HttpMethod method = HttpMethod.Post;         
+            var URL = DAL.GetEnviromentKey() + "/Api/Entry/InsertEntry";
             var response = string.Empty;
 
             var httpClientHandler = new HttpClientHandler
@@ -94,8 +93,7 @@ namespace PhoneBook.Pages
         public async Task<List<PhoneBookObject>> GetPhoneBooksAPICall()
         {
             HttpMethod method = HttpMethod.Get;
-            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
-            var URL = "https://localhost:44338/Api/PhoneBook/GetPhoneBooks";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var URL = DAL.GetEnviromentKey() + "/Api/PhoneBook/GetPhoneBooks"; 
             var response = string.Empty;
 
             var httpClientHandler = new HttpClientHandler

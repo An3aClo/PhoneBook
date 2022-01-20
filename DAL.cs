@@ -161,5 +161,16 @@ namespace PhoneBook
                 _Connection.Close();
             }
         }
+
+        public static string GetEnviromentKey()
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+               .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+               .AddJsonFile("appsettings.json")
+               .Build();
+            var enviromentEndPoint = configuration.GetSection("EnvironmentEndPoint");
+
+            return enviromentEndPoint.Value.ToString();
+        }
     }
 }

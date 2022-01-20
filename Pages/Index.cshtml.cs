@@ -76,8 +76,7 @@ namespace PhoneBook.Pages
         public async Task<List<PhoneBookObject>> GetPhoneBooksAPICall()
         {
             HttpMethod method = HttpMethod.Get;
-            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
-            var URL = "https://localhost:44338/Api/PhoneBook/GetPhoneBooks";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var URL = DAL.GetEnviromentKey() + "/Api/PhoneBook/GetPhoneBooks"; 
             var response = string.Empty;
 
             var httpClientHandler = new HttpClientHandler
@@ -110,8 +109,7 @@ namespace PhoneBook.Pages
         {
             var payload = JsonConvert.SerializeObject(phoneBookDetail);
             HttpMethod method = HttpMethod.Get;
-            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
-            var URL = "https://localhost:44338/Api/Entry/GetEntry";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var URL = DAL.GetEnviromentKey() + "/Api/Entry/GetEntry"; 
             var response = string.Empty;
 
             var httpClientHandler = new HttpClientHandler
@@ -140,8 +138,7 @@ namespace PhoneBook.Pages
         public async Task<List<EntryObject>> GetAllEntriesAPICall()
         {
             HttpMethod method = HttpMethod.Get;
-            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
-            var URL = "https://localhost:44338/Api/Entry/GetAllEntry";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var URL = DAL.GetEnviromentKey() + "/Api/Entry/GetAllEntry";  
             var response = string.Empty;
 
             var httpClientHandler = new HttpClientHandler

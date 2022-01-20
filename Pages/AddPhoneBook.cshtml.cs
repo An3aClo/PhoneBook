@@ -43,8 +43,7 @@ namespace PhoneBook.Pages
         {
             var payload = JsonConvert.SerializeObject(phoneBookDetail);
             HttpMethod method = HttpMethod.Post;
-            //var URL = _configuration.GetSection("EnvironmentEndPoint").Value + "/createLead";  //ToDo - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
-            var URL = "https://localhost:44338/Api/PhoneBook/InsertPhoneBook";  //TODO:: - Andrea - Move this to reference a dynamic variable in AWS Parameter Store
+            var URL = DAL.GetEnviromentKey() + "/Api/PhoneBook/InsertPhoneBook"; 
             var response = string.Empty;
 
             var httpClientHandler = new HttpClientHandler
