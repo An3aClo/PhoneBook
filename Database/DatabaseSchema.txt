@@ -1,0 +1,276 @@
+﻿USE [master]
+GO
+/****** Object:  Database [CIB Digital Tech Assessment]    Script Date: 2022/01/21 07:32:04 ******/
+CREATE DATABASE [CIB Digital Tech Assessment]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'CIB Digital Tech – Assessment', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\CIB Digital Tech – Assessment.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'CIB Digital Tech – Assessment_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\CIB Digital Tech – Assessment_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET COMPATIBILITY_LEVEL = 150
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [CIB Digital Tech Assessment].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET RECOVERY FULL 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET  MULTI_USER 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET DELAYED_DURABILITY = DISABLED 
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'CIB Digital Tech Assessment', N'ON'
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET QUERY_STORE = OFF
+GO
+USE [CIB Digital Tech Assessment]
+GO
+/****** Object:  User [app]    Script Date: 2022/01/21 07:32:04 ******/
+CREATE USER [app] FOR LOGIN [app] WITH DEFAULT_SCHEMA=[dbo]
+GO
+ALTER ROLE [db_owner] ADD MEMBER [app]
+GO
+ALTER ROLE [db_accessadmin] ADD MEMBER [app]
+GO
+ALTER ROLE [db_securityadmin] ADD MEMBER [app]
+GO
+ALTER ROLE [db_ddladmin] ADD MEMBER [app]
+GO
+ALTER ROLE [db_backupoperator] ADD MEMBER [app]
+GO
+ALTER ROLE [db_datareader] ADD MEMBER [app]
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [app]
+GO
+ALTER ROLE [db_denydatareader] ADD MEMBER [app]
+GO
+ALTER ROLE [db_denydatawriter] ADD MEMBER [app]
+GO
+/****** Object:  Table [dbo].[Entry]    Script Date: 2022/01/21 07:32:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Entry](
+	[EntryID] [uniqueidentifier] NOT NULL,
+	[EntryName] [nchar](255) NULL,
+	[EntryNumber] [nchar](255) NULL,
+	[PhoneBookID] [uniqueidentifier] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[EntryID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PhoneBook]    Script Date: 2022/01/21 07:32:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PhoneBook](
+	[PhoneBookID] [uniqueidentifier] NOT NULL,
+	[PhoneBookName] [nchar](255) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[PhoneBookID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Entry]  WITH CHECK ADD FOREIGN KEY([PhoneBookID])
+REFERENCES [dbo].[PhoneBook] ([PhoneBookID])
+GO
+/****** Object:  StoredProcedure [dbo].[GetAllEntries]    Script Date: 2022/01/21 07:32:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:Andrea Cloete
+-- Create date:2022/01/20 21:24:15
+-- Description:Fetch all entries from entry table
+-- =============================================
+CREATE PROCEDURE [dbo].[GetAllEntries]
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    Select * from Entry
+END
+GO
+/****** Object:  StoredProcedure [dbo].[GetAllPhoneBooks]    Script Date: 2022/01/21 07:32:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:Andrea Cloete
+-- Create date:2022/01/20 21:24:16
+-- Description: Get all phon book records from 
+	-- the phone book table
+-- =============================================
+CREATE PROCEDURE [dbo].[GetAllPhoneBooks]
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT * from PhoneBook
+END
+GO
+/****** Object:  StoredProcedure [dbo].[GetEntry]    Script Date: 2022/01/21 07:32:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:Andrea Cloete
+-- Create date:2022/01/20 21:24:17
+-- Description: Fetch All entries from Entry table whete phone book id matches
+-- =============================================
+CREATE PROCEDURE [dbo].[GetEntry]
+@PhoneBookID uniqueidentifier = null
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from interfering with SELECT statements.
+	SET NOCOUNT ON;
+	IF (@PhoneBookID is not null)
+	BEGIN
+		SELECT * FROM Entry WHERE PhoneBookID = @PhoneBookID;
+	END
+END
+GO
+/****** Object:  StoredProcedure [dbo].[InsertEntry]    Script Date: 2022/01/21 07:32:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:Andrea Cloete
+-- Create date:2022/01/20 21:24:18
+-- Description:Insert an entry record
+-- =============================================
+CREATE PROCEDURE [dbo].[InsertEntry]
+@EntryName nchar(255) = null,
+@EntryNumber nchar(255) = null,
+@EntryID uniqueidentifier = null,
+@PhoneBookId uniqueidentifier = null
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from interfering with SELECT statements.
+	SET NOCOUNT ON;
+		IF (@EntryName IS NOT NULL AND
+		@EntryNumber IS NOT NULL AND
+		@EntryID IS NOT NULL AND
+		@PhoneBookId IS NOT NULL)
+	BEGIN
+	  insert into Entry 
+	  (
+		  EntryID,
+		  EntryName,
+		  EntryNumber,
+		  PhoneBookID
+	  )
+	  values
+	  (
+		  @EntryID, 
+		  @EntryName,
+		  @EntryNumber,
+		  @PhoneBookId
+	  )
+	  SELECT EntryID FROM Entry WHERE EntryID = @EntryID
+	END
+END
+GO
+/****** Object:  StoredProcedure [dbo].[InsertPhoneBook]    Script Date: 2022/01/21 07:32:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:Andrea Cloete
+-- Create date:2022/01/20 21:24:20
+-- Description:Insert a phone book record
+-- =============================================
+CREATE PROCEDURE [dbo].[InsertPhoneBook]
+@PhoneBookName nchar(255) = null,
+@PhoneBookID uniqueidentifier = null
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from interfering with SELECT statements.
+	SET NOCOUNT ON;
+	IF (@PhoneBookName IS NOT NULL AND @PhoneBookID IS NOT NULL)
+	BEGIN
+	  insert into PhoneBook 
+	  (
+		  [PhoneBookID],
+		  [PhoneBookName]
+	  )
+	  values
+	  (
+		  @PhoneBookID, 
+		  @PhoneBookName
+	  )
+	  SELECT [PhoneBookID] FROM PhoneBook WHERE PhoneBookID = @PhoneBookID
+	END
+END
+GO
+USE [master]
+GO
+ALTER DATABASE [CIB Digital Tech Assessment] SET  READ_WRITE 
+GO
