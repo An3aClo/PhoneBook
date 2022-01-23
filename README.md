@@ -1,6 +1,6 @@
 # PhoneBook
 
-##**Technologies Used:**
+**Technologies Used:**
 
 This project is build using Razor pages with .NET Core 3.1 while using a SQL database.
 
