@@ -39,7 +39,7 @@ namespace PhoneBook.Pages
             if (AllPhoneBooks.Count>0)
             {
                 //Set default PhoneBook
-                SelectedPhoneBook = AllPhoneBooks.First();
+                SelectedPhoneBook = AllPhoneBooks.OrderBy(x=>x.PhoneBookName).First();
                 //Fetch all contacts of phone books
                 var phoneBookDetail = new PhoneBookDetail
                 {
@@ -171,7 +171,7 @@ namespace PhoneBook.Pages
                 List<EntryObject> allEntries = GetAllEntriesAPICall().Result;
 
                 //Filter data
-                AllPhoneBookEntries = (List<EntryObject>)allEntries.FindAll(s => s.EntryName.Contains(SearchTerm) || s.EntryNumber.Contains(SearchTerm));
+                AllPhoneBookEntries = (List<EntryObject>)allEntries.FindAll(s => s.EntryName.ToLower().Contains(SearchTerm.ToLower()) || s.EntryNumber.ToLower().Contains(SearchTerm.ToLower()));
 
                 //Fetch all phone books 
                 AllPhoneBooks = GetPhoneBooksAPICall().Result;

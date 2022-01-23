@@ -16,12 +16,20 @@
                         <h3>Your Phone Books</h3>
                     </div>
                 </div>
-                @foreach (var phoneBook in Model.AllPhoneBooks)
+                @if (Model.AllPhoneBooks.Count <= 0)
                 {
-                    <button asp-page-handler="FetchPhoneBookContact" asp-route-phoneBookId="@phoneBook.PhoneBookID" class="btn_green mt-0 mb-3" type="submit">
-                        @phoneBook.PhoneBookName
-                    </button>
+                    <div class="text"><i>No Phone books found. <a href="/AddPhoneBook">Click here to add a phone book</a></i></div>
                 }
+                else
+                {
+                    foreach (var phoneBook in Model.AllPhoneBooks.OrderBy(x=>x.PhoneBookName))
+                    {
+                        <button asp-page-handler="FetchPhoneBookContact" asp-route-phoneBookId="@phoneBook.PhoneBookID" class="btn_green mt-0 mb-3" type="submit">
+                            @phoneBook.PhoneBookName
+                        </button>
+                    }
+                }
+
                 <div class="content_box pb-5">
                     <div class="row">
                         <div class="col-12 col-md-6">
@@ -41,8 +49,9 @@
                             </div>
                         </div>
                     </div>
+                    <br />
                     <div class="table_wrap" style="border: 0;">
-                        <table class="table table2"  id="entryTable">
+                        <table class="table table2" id="entryTable">
                             <thead>
                                 <tr>
                                     <th style="background: #CCDCD1;">Name</th>
@@ -54,7 +63,7 @@
                                     {
                                         if (Model.AllPhoneBookEntries.Count > 0)
                                         {
-                                            foreach (var entry in Model.AllPhoneBookEntries)
+                                            foreach (var entry in Model.AllPhoneBookEntries.OrderBy(x => x.EntryName))
                                             {
                                                 <tr>
                                                     <td>
@@ -73,7 +82,7 @@
                                             <tr>
                                                 <td>
                                                     <div class="customer_flex">
-                                                        <div class="text">No entries found for the phone book. <a href="/AddEntry">Click here to add an entry</a></div>
+                                                        <div class="text"><i>No entries found for the phone book. <a href="/AddEntry">Click here to add an entry</a></i></div>
                                                     </div>
                                                 </td>
                                                 <td class="black"></td>
@@ -89,3 +98,4 @@
         </div>
     </section>
 </form>
+<br />
