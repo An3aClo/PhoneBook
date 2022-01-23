@@ -6,10 +6,10 @@ This project is build using Razor pages with .NET Core 3.1 while using a SQL dat
 
 **How to run the project**
 
-To re-create the database run the script located under the Database/DatabaseSchema.txt. This will created the database along with the tables and the store procedures needed.
-To change the connection string go to the appsettings.json file and add the connectionstring under the SQLConnection attribute.
-The EnviromentEndpoint will also need to be corrected if not the same. This can be done by replacing the EnvironmentEndPoint attribute in the appsettings.json file.
-Once the database and setting are in order the program can be run by pressing F5 in visual studio.
+1. To re-create the database run the script located under the Database/DatabaseSchema.txt. This will created the database along with the tables and the store procedures needed.
+2. To change the connection string go to the appsettings.json file and add the connectionstring under the SQLConnection attribute.
+3. The EnviromentEndpoint will also need to be corrected if not the same. This can be done by replacing the EnvironmentEndPoint attribute in the appsettings.json file.
+4. Once the database and setting are in order the program can be run. The roject can be run in IIS Express as well. Just press F5. 
 
 **Demo Video**
 
