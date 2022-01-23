@@ -14,7 +14,8 @@ Once the database and setting are in order the program can be run by pressing F5
 
 https://we.tl/t-rRYnoix3k3
 
-What is the software about?
+**What is the software about?**
+
 The software allows a user to create multiple phone books and add multiple contacts to the phone book of their choice.
 The user can then select a book which they want to view and the entries in the phone book will display in a list form. 
 The user can search for an entry, the search takes place across all phone books and not just the selected phone book. 
