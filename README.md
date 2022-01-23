@@ -1,6 +1,6 @@
 # PhoneBook
 
-Technologies Used:
+**Technologies Used:**
 This project is build using Razor pages with .NET Core 3.1 while using a SQL database.
 
 How to run the project
@@ -9,7 +9,7 @@ To change the connection string go to the appsettings.json file and add the conn
 The EnviromentEndpoint will also need to be corrected if not the same. This can be done by replacing the EnvironmentEndPoint attribute in the appsettings.json file.
 Once the database and setting are in order the program can be run by pressing F5 in visual studio.
 
-Demo Video
+**Demo Video**
 https://we.tl/t-rRYnoix3k3
 
 What is the software about?
@@ -17,7 +17,7 @@ The software allows a user to create multiple phone books and add multiple conta
 The user can then select a book which they want to view and the entries in the phone book will display in a list form. 
 The user can search for an entry, the search takes place across all phone books and not just the selected phone book. 
 
-Folder break down 
+**Folder break down **
 1. The styling of the website is pulled from the site.css file under wwwroot/css.
 
 2. In the Controllers folder you will find 2 controllers one for each entity namely Entry and PhoneBooks.
